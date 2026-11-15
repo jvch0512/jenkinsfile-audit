@@ -1,0 +1,16 @@
+# 3 files, 15 findings
+high	JKS002	legacy/Jenkinsfile:7	literal secret assigned to REGISTRY_PASSWORD: use Jenkins credentials
+high	JKS001	legacy/Jenkinsfile:12	remote script piped into a shell: the pipeline runs whatever the server returns
+high	JKS007	legacy/Jenkinsfile:13	user-controlled value interpolated in a double-quoted shell string: command injection through parameters or branch names
+high	JKS007	legacy/Jenkinsfile:14	user-controlled value interpolated in a double-quoted shell string: command injection through parameters or branch names
+high	JKS003	legacy/Jenkinsfile:21	credential interpolated in a double-quoted shell string: use single quotes and let the shell read the variable
+high	JKS003	legacy/Jenkinsfile.lib:7	credential interpolated in a double-quoted shell string: use single quotes and let the shell read the variable
+medium	JKS009	legacy/Jenkinsfile:2	shared library pinned to branch main: pin a tag or commit
+medium	JKS004	legacy/Jenkinsfile:18	privileged container or Docker socket: the build can take over the host
+medium	JKS005	legacy/Jenkinsfile:18	container runs as root
+medium	JKS006	legacy/Jenkinsfile:22	TLS verification is disabled
+medium	JKS010	legacy/Jenkinsfile:24	dynamic code evaluation
+medium	JKS009	legacy/Jenkinsfile.lib:1	shared library shared has no version: it follows whatever the default branch is
+low	JKS008	legacy/Jenkinsfile:1	no timeout: a stuck build holds an executor forever
+low	JKS011	legacy/Jenkinsfile:5	agent any: the job can land on any node, including the controller
+low	JKS008	legacy/Jenkinsfile.lib:1	no timeout: a stuck build holds an executor forever

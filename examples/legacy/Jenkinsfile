@@ -1,0 +1,28 @@
+// Old pipeline. Synthetic example.
+@Library('company-lib@main') _
+
+pipeline {
+    agent any
+    environment {
+        REGISTRY_PASSWORD = 'changeme-123'
+    }
+    stages {
+        stage('Prepare') {
+            steps {
+                sh "curl -s https://example.test/setup.sh | bash"
+                sh "git checkout ${params.BRANCH}"
+                sh "echo building ${env.BRANCH_NAME}"
+            }
+        }
+        stage('Publish') {
+            agent { docker { image 'builder:latest'; args '-u root -v /var/run/docker.sock:/var/run/docker.sock' } }
+            steps {
+                withCredentials([string(credentialsId: 'npm', variable: 'NPM_TOKEN')]) {
+                    sh "npm config set //registry.example.test/:_authToken ${NPM_TOKEN}"
+                    sh "npm config set strict-ssl false"
+                }
+                script { evaluate(readFile('extra.groovy')) }
+            }
+        }
+    }
+}

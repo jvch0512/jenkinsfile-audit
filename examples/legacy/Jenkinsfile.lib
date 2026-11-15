@@ -1,0 +1,9 @@
+@Library('shared') _
+node {
+    sh '''
+        echo "$TOKEN"
+    '''
+    sh """
+        deploy --key ${API_KEY}
+    """
+}

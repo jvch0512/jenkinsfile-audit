@@ -1,0 +1,21 @@
+// Hardened pipeline. Synthetic example.
+@Library('company-lib@v2.4.1') _
+
+pipeline {
+    agent { label 'build' }
+    options { timeout(time: 30, unit: 'MINUTES') }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'make build'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                withCredentials([string(credentialsId: 'deploy-token', variable: 'TOKEN')]) {
+                    sh 'curl -fsS -H "Authorization: Bearer $TOKEN" https://deploy.example.test/release'
+                }
+            }
+        }
+    }
+}
