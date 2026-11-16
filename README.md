@@ -2,6 +2,8 @@
 
 jenkinsfile-audit reads Jenkins pipeline files as text, with comments removed and Groovy strings tracked, and reports the patterns that turn a CI pipeline into an attack path: secrets interpolated into shell commands (visible in logs and process lists), build parameters and branch names pasted into `sh`, containers started as root or with the Docker socket, shared libraries that follow a moving branch and downloads piped into a shell.
 
+![Terminal demo of jenkinsfile-audit on its sample data](docs/demo.svg)
+
 **Live demo:** https://jvch0512.github.io/jenkinsfile-audit/ (Synthetic Jenkinsfiles.)
 
 Groovy 2 (JVM), standard library only. The demo page is rendered from the tool's `--tsv` output by `scripts/site.py` (Python 3, only needed to regenerate the page).
@@ -51,3 +53,13 @@ make test    # 51 checks, incl. 3000-case fuzzing and CLI exit codes
 ```
 
 MIT.
+
+## Code scanning (SARIF)
+
+`scripts/tsv2sarif.py` converts the `--tsv` output into SARIF 2.1.0, so findings show up in GitHub code scanning:
+
+```sh
+bin/jenkinsfile-audit examples --tsv 2>/dev/null | python3 scripts/tsv2sarif.py --tool jenkinsfile-audit --prefix examples > results.sarif
+```
+
+Upload `results.sarif` with `github/codeql-action/upload-sarif`. Severities map to SARIF levels (critical and high to error, medium to warning, low and info to note) and to a `security-severity` score.
